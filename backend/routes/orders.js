@@ -3,20 +3,15 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function (req, res) {
-  // Get all users, id, name, email
   res.send('respond with a resource');
 });
 
-router.post('/', (req, res) => {
-  // Get one type of user, send whole object
-});
-
 router.post('/add', (req, res) => {
-  // Create user
+  // Create order for specific user
 });
 
-router.post('login', (req, res) => {
-  // login user
+router.get('/all', (req, res) => {
+  // Get all orders
 });
 
 module.exports = router;
