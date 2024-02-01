@@ -74,8 +74,37 @@ router.post('/add', (req, res) => {
     });
 });
 
-router.post('login', (req, res) => {
-  // login user
+/**
+ * Checks if a user can login with email and password information provided
+ * If email matches, checks if the sent password matches the decrypted version
+ * If succesfull sends back username and id
+ */
+router.post('/login', (req, res) => {
+  req.app.locals.db
+    .collection('users')
+    .findOne({ email: req.body.email })
+    .then((loginMailMatches) => {
+      if (!loginMailMatches) {
+        return res.status().json({ err: 'Invalid login info' });
+      }
+      const { userName, id, password } = loginMailMatches;
+      const storedPasswordDecrypted = getDecryptedData(
+        password,
+        process.env.SALT_KEY
+      );
+      if (req.body.password === storedPasswordDecrypted) {
+        const userSentBack = { userName: userName, id: id };
+        console.log('Login is a success, sending user', userSentBack);
+        res.json(userSentBack);
+      } else {
+        console.log('cant login');
+        res.status(404).json({ err: 'Invalid login info' });
+      }
+    })
+    .catch((err) => {
+      console.log(err, 'could not login');
+      res.status(500).json({ err: 'could not login' });
+    });
 });
 
 module.exports = router;
