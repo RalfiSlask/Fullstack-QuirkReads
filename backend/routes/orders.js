@@ -7,10 +7,21 @@ router.get('/', function (req, res) {
 
 router.post('/add', (req, res) => {
   // Create order for specific user
+  req.app.locals.db
+    .collection('orders')
+    .insertOne(req.body)
+    .then((insertedResults) => {
+      console.log(insertedResults);
+      res.json({ results: insertedResults });
+    })
+    .catch((err) => {
+      console.log(err, 'could not add order');
+      res.status(500).json({ err: 'could not add order' });
+    });
 });
 
 /**
- * Receving all the stored orders
+ * Receving all the orders
  */
 router.get('/all', (req, res) => {
   // Get all orders
@@ -19,7 +30,7 @@ router.get('/all', (req, res) => {
     .find()
     .toArray()
     .then((ordersData) => {
-      res.json({ orders: ordersData });
+      res.json(ordersData);
     })
     .catch((err) => {
       console.log(err, 'could not get all orders');
