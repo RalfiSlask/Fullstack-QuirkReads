@@ -1,10 +1,30 @@
 const express = require('express');
 const router = express.Router();
+const CryptoJS = require('crypto-js');
+const dotenv = require('dotenv');
+const {
+  getEncryptedData,
+  getDecryptedData,
+} = require('../utils/helperfunctions');
 
-/* GET users listing. */
+dotenv.config();
+
+/**
+ * Receving all users without password using projection
+ */
 router.get('/', function (req, res) {
-  // Get all users, id, name, email
-  res.send('respond with a resource');
+  req.app.locals.db
+    .collection('users')
+    .find({}, { projection: { password: 0 } })
+    .toArray()
+    .then((usersData) => {
+      console.log(usersData);
+      res.json({ users: usersData });
+    })
+    .catch((err) => {
+      console.err(err, 'could not find users');
+      res.status(500).json({ err: 'could not find users' });
+    });
 });
 
 router.post('/', (req, res) => {
