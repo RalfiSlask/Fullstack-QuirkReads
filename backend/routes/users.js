@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
     .toArray()
     .then((usersData) => {
       console.log(usersData);
-      res.json({ users: usersData });
+      res.json(usersData);
     })
     .catch((err) => {
       console.err(err, 'could not find users');
@@ -103,19 +103,19 @@ router.post('/login', (req, res) => {
     .findOne({ email: req.body.email })
     .then((loginMailMatches) => {
       if (!loginMailMatches) {
-        return res.status().json({ err: 'Invalid login info' });
+        return res.status(401).json({ err: 'Invalid login info' });
       }
-      const { name, id, password } = loginMailMatches;
+      const { id, password } = loginMailMatches;
       const storedPasswordDecrypted = getDecryptedData(
         password,
         process.env.SALT_KEY
       );
       if (req.body.password === storedPasswordDecrypted) {
-        console.log('Login is a success, sending user', id);
+        console.log('Login is a success, sending user id', id);
         res.json({ id: id });
       } else {
         console.log('cant login');
-        res.status(404).json({ err: 'Invalid login info' });
+        res.status(401).json({ err: 'Invalid login info' });
       }
     })
     .catch((err) => {
