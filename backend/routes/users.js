@@ -27,8 +27,26 @@ router.get('/', function (req, res) {
     });
 });
 
-router.post('/', (req, res) => {
-  // Get one type of user, send whole object
+/**
+ * Sends back whole user object if provided id matches a stored user id
+ */
+router.post('/:id', (req, res) => {
+  req.app.locals.db
+    .collection('users')
+    .findOne({ id: req.params.id })
+    .then((user) => {
+      if (user) {
+        console.log('can find user');
+        res.json({ user: user });
+      } else {
+        console.log('cant find user');
+        res.json({ err: 'cant find user' });
+      }
+    })
+    .catch((err) => {
+      console.log(err, 'could not find user in database');
+      res.status(500).json({ err: 'could not find user in database' });
+    });
 });
 
 /**
@@ -36,7 +54,7 @@ router.post('/', (req, res) => {
  * Checks if user email already exists, if it does exists method
  */
 router.post('/add', (req, res) => {
-  const { userName, email, password } = req.body;
+  const { name, email, password } = req.body;
   req.app.locals.db
     .collection('users')
     .findOne({ email: email })
@@ -55,14 +73,14 @@ router.post('/add', (req, res) => {
         .collection('users')
         .insertOne({
           id: uuidv4(),
-          userName: userName,
+          name: name,
           email: email,
           password: encryptedPassword,
         })
         .then((insertResult) => {
           if (insertResult.acknowledged) {
             console.log('sent user', req.body);
-            res.status(201).json({ user: userName, email: email });
+            res.status(201).json({ user: name, email: email });
           } else {
             res.status(500).json({ err: 'could not add user' });
           }
@@ -77,7 +95,7 @@ router.post('/add', (req, res) => {
 /**
  * Checks if a user can login with email and password information provided
  * If email matches, checks if the sent password matches the decrypted version
- * If succesfull sends back username and id
+ * If succesfull sends back name and id
  */
 router.post('/login', (req, res) => {
   req.app.locals.db
@@ -87,15 +105,14 @@ router.post('/login', (req, res) => {
       if (!loginMailMatches) {
         return res.status().json({ err: 'Invalid login info' });
       }
-      const { userName, id, password } = loginMailMatches;
+      const { name, id, password } = loginMailMatches;
       const storedPasswordDecrypted = getDecryptedData(
         password,
         process.env.SALT_KEY
       );
       if (req.body.password === storedPasswordDecrypted) {
-        const userSentBack = { userName: userName, id: id };
-        console.log('Login is a success, sending user', userSentBack);
-        res.json(userSentBack);
+        console.log('Login is a success, sending user', id);
+        res.json({ id: id });
       } else {
         console.log('cant login');
         res.status(404).json({ err: 'Invalid login info' });
