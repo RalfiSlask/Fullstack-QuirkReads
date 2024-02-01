@@ -45,30 +45,45 @@ router.get('/:id', (req, res) => {
  * For creating and adding product
  */
 router.post('/add', (req, res) => {
-  const { title, author, price, storage } = req.body;
+  const { name, description, price, lager } = req.body;
+
+  const newId = uuidv4();
   req.app.locals.db
     .collection('products')
-    .insertOne({
-      title: title,
-      author: author,
-      price: price,
-      storage: storage,
-      id: uuidv4(),
-    })
-    .then((insertResult) => {
-      // if insertOne operation goes through
-      if (insertResult.acknowledged) {
-        console.log('sent product:', req.body);
-        res.json({ ...req.body, id: uuidv4() });
-      } else {
-        res.status(500).json({ err: 'could not add product' });
+    .findOne({ name: name, description: description })
+    .then((productResults) => {
+      if (productResults) {
+        console.log('book already exists');
+        res.json({ err: 'book already exists' });
+        return;
       }
+      req.app.locals.db
+        .collection('products')
+        .insertOne({
+          name: name,
+          description: description,
+          price: price,
+          lager: lager,
+          id: newId,
+        })
+        .then((insertResult) => {
+          // if insertOne operation goes through
+          if (insertResult.acknowledged) {
+            console.log('sent product:', req.body);
+            res.json({ ...req.body, id: newId });
+          } else {
+            res.status(500).json({ err: 'could not add product' });
+          }
+        })
+        .catch((err) => {
+          console.log(err, 'could not add product');
+          res.status(500).json({ err: 'could not add product' });
+        });
     })
     .catch((err) => {
-      console.log(err, 'could not add product');
-      res.status(500).json({ err: 'could not add product' });
+      console.log(err, 'cant find product');
+      res.status(500).json({ err: 'cant find product' });
     });
-  // Create product
 });
 
 module.exports = router;
