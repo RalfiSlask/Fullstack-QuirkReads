@@ -1,3 +1,5 @@
+const CryptoJS = require('crypto-js');
+
 const getEncryptedData = (data, saltKey) => {
   return CryptoJS.AES.encrypt(data, saltKey).toString();
 };
