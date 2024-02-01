@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 /**
- * Recieveing all products as array of object
+ * Receiving all products, response as array of objects
  */
 router.get('/', function (req, res) {
   req.app.locals.db
@@ -14,7 +14,7 @@ router.get('/', function (req, res) {
     })
     .catch((err) => {
       console.error(err, 'could not recieve products');
-      res.status(500).json({ error: 'Could not recieve products' });
+      res.status(500).json({ error: 'could not recieve products' });
     });
 });
 
@@ -22,7 +22,22 @@ router.get('/', function (req, res) {
  * Recieving a specifik product using id parameter
  */
 router.get('/:id', (req, res) => {
-  // With product id get product
+  console.log(req.params.id);
+  req.app.locals.db
+    .collection('products')
+    .findOne({ 'id': req.params.id })
+    .then((product) => {
+      if (product) {
+        console.log(product);
+        res.json(product);
+      } else {
+        res.status(404).json({ err: 'could not find product' });
+      }
+    })
+    .catch((err) => {
+      console.error(err, 'could not recieve product');
+      res.status(500).json({ error: 'could not recieve product' });
+    });
 });
 
 /**
