@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const dotenv = require('dotenv');
 const { v4: uuidv4 } = require('uuid');
+
+dotenv.config();
 
 /**
  * Receiving all products, response as array of objects
@@ -45,9 +48,23 @@ router.get('/:id', (req, res) => {
  * For creating and adding product
  */
 router.post('/add', (req, res) => {
-  const { name, description, price, lager } = req.body;
+  const { name, description, price, lager, category, token } = req.body;
+
+  if (token !== process.env.TOKEN) {
+    console.log('not authorized');
+    res.status(401).json({ message: 'not authorized to add book' });
+    return;
+  }
 
   const newId = uuidv4();
+  const insertedProduct = {
+    name: name,
+    description: description,
+    price: price,
+    lager: lager,
+    category: category,
+    id: newId,
+  };
   req.app.locals.db
     .collection('products')
     .findOne({ name: name, description: description })
@@ -59,18 +76,12 @@ router.post('/add', (req, res) => {
       }
       req.app.locals.db
         .collection('products')
-        .insertOne({
-          name: name,
-          description: description,
-          price: price,
-          lager: lager,
-          id: newId,
-        })
+        .insertOne(insertedProduct)
         .then((insertResult) => {
           // if insertOne operation goes through
           if (insertResult.acknowledged) {
-            console.log('sent product:', req.body);
-            res.json({ ...req.body, id: newId });
+            console.log('sent product:', insertedProduct);
+            res.json(insertedProduct);
           } else {
             res.status(500).json({ err: 'could not add product' });
           }
