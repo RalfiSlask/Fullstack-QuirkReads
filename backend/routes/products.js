@@ -45,6 +45,30 @@ router.get('/:id', (req, res) => {
 });
 
 /**
+ * Gets all products under a specific category based on its id
+ */
+router.get('/category/:id', (req, res) => {
+  console.log(req.params.id);
+  req.app.locals.db
+    .collection('products')
+    .find({ category: req.params.id })
+    .toArray()
+    .then((products) => {
+      if (products.length > 0) {
+        console.log('products', products);
+        res.json(products);
+      } else {
+        console.log(err, 'could not find products');
+        res.status(404).json({ err: 'could not find products' });
+      }
+    })
+    .catch((err) => {
+      console.log(err, 'could not get products');
+      res.status(500).json({ err: 'could not get products' });
+    });
+});
+
+/**
  * For creating and adding product
  */
 router.post('/add', (req, res) => {
