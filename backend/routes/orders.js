@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 router.get('/', function (req, res) {
   res.send('respond with a resource');
@@ -23,8 +26,13 @@ router.post('/add', (req, res) => {
 /**
  * Receving all the orders
  */
-router.get('/all', (req, res) => {
-  // Get all orders
+router.get('/all/:token', (req, res) => {
+  if (req.params.token !== process.env.TOKEN) {
+    console.log('not authorized');
+    return res
+      .status(401)
+      .json({ message: 'not authorized to get all orders' });
+  }
   req.app.locals.db
     .collection('orders')
     .find()
