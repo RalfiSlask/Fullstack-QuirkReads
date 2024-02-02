@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const dotenv = require('dotenv');
+const { v4: uuidv4 } = require('uuid');
 
 dotenv.config();
 
@@ -47,7 +48,7 @@ router.post('/add', (req, res) => {
       }
       req.app.locals.db
         .collection('categories')
-        .insertOne({ name: req.body.name })
+        .insertOne({ name: req.body.name, id: uuidv4() })
         .then((result) => {
           if (result.acknowledged) {
             console.log('added category');
