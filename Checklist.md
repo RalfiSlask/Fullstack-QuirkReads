@@ -24,17 +24,17 @@
 
 ### Users
 
-1. Login user - 401 if password is wrong
+1. Modify: Login user - 401 if password is wrong \*
 
 ### Products
 
-1. Create product - If no token = 401
-2. Get products from category
-3. Create category
-4. Get all categories
+1. Modify: Create product - If no token = 401
+2. Get products from category \*
+3. Create category \*
+4. Get all categories \*
 
 ### Orders
 
-1. Get all orders - If no key no access to orders
-2. Add order for specific user - dynamic user id
-3. Get orders for specific user - no key will result in no access
+1. Modify: Get all orders - If no key no access to orders \*
+2. Modify: Add order for specific user - dynamic user id
+3. Get orders for specific user - no key will result in no access \*
