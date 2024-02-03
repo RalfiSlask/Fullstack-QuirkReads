@@ -134,4 +134,20 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+body,
+:root {
+  background-color: #f2f2f2;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.button-primary {
+  @apply bg-primaryBtn hover:bg-primaryBtn-hover rounded-md px-8 py-2 text-lg;
+}
+
+.input {
+  @apply rounded-md pl-2 py-2 border-2 border-solid border-primaryBtn-border placeholder:text-gray-400;
 }/*# sourceMappingURL=index.css.map */

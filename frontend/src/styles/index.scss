@@ -3,6 +3,20 @@
 @tailwind utilities;
 
 @import './vendor/reset';
+@import './variables/variables';
 
+body,
 :root {
+  background-color: $primary;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.button-primary {
+  @apply bg-primaryBtn hover:bg-primaryBtn-hover rounded-md px-8 py-2 text-lg;
+}
+
+.input {
+  @apply rounded-md pl-2 py-2 border-2 border-solid border-primaryBtn-border placeholder:text-gray-400;
 }
