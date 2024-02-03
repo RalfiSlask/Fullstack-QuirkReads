@@ -13,7 +13,7 @@ POST http://localhost:3000/api/users/
 Content-Type: application/json
 
 {
-  "id": "74cf5f5d-5d86-40c5-ad3c-0125dd916c77"
+  "id": "c156f143-5765-4b04-95f6-9658b2c66bc9"
 }
 
 ###
@@ -35,7 +35,7 @@ POST http://localhost:3000/api/users/login
 Content-Type: application/json
 
 {
-  "email": "name1@example.com",
+  "email": "user1@example.com",
   "password": "test1"
 }
 
