@@ -1,20 +1,25 @@
 import { createContext, FormEvent, ReactNode, useState } from 'react';
+import { ILoginFormInputValues, ICreateAccountFormInputValues } from '../utils/types';
 
 export const LoginContext = createContext<undefined | ILoginTypes>(undefined);
 
 interface ILoginTypes {
   // states
-  loginInputValues: {
-    email: string;
-    password: string;
-  };
-  errorMessage: string;
+  loginInputValues: ILoginFormInputValues;
+  createAccountInputValues: ICreateAccountFormInputValues;
+  loginErrorMessage: string;
+  createAccountErrorMessage: string;
   // setters
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setLoginErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setCreateAccountErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   // functions
   handleLoginReset: () => void;
-  handleEmailInput: (e: FormEvent<HTMLInputElement>) => void;
-  handlePasswordInput: (e: FormEvent<HTMLInputElement>) => void;
+  handleCreateAccountReset: () => void;
+  handleLoginInputOnChange: (inputKey: keyof ILoginFormInputValues, e: FormEvent<HTMLInputElement>) => void;
+  handleCreateAccountInputOnChange: (
+    inputKey: keyof ICreateAccountFormInputValues,
+    e: FormEvent<HTMLInputElement>
+  ) => void;
 }
 
 interface ILoginType {
@@ -22,36 +27,51 @@ interface ILoginType {
 }
 
 export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
-  const [loginInputValues, setloginInputValues] = useState({ email: '', password: '' });
-  const [errorMessage, setErrorMessage] = useState('');
+  const [loginInputValues, setLoginInputValues] = useState({ email: '', password: '' });
+  const [createAccountInputValues, setCreateAccountInputValues] = useState({ name: '', email: '', password: '' });
+  const [loginErrorMessage, setLoginErrorMessage] = useState('');
+  const [createAccountErrorMessage, setCreateAccountErrorMessage] = useState('');
 
   const handleLoginReset = () => {
-    setloginInputValues({ email: '', password: '' });
-    setErrorMessage('');
+    setLoginInputValues({ email: '', password: '' });
+    setLoginErrorMessage('');
   };
 
-  const handleEmailInput = (e: FormEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement;
-    setloginInputValues(prev => ({ ...prev, email: target.value }));
-    setErrorMessage('');
+  const handleCreateAccountReset = () => {
+    setCreateAccountInputValues({ name: '', email: '', password: '' });
+    setCreateAccountErrorMessage('');
   };
 
-  const handlePasswordInput = (e: FormEvent<HTMLInputElement>) => {
+  const handleLoginInputOnChange = (inputKey: keyof ILoginFormInputValues, e: FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
-    setloginInputValues(prev => ({ ...prev, password: target.value }));
-    setErrorMessage('');
+    setLoginInputValues(prev => ({ ...prev, [inputKey]: target.value }));
+    setLoginErrorMessage('');
+  };
+
+  const handleCreateAccountInputOnChange = (
+    inputKey: keyof ICreateAccountFormInputValues,
+    e: FormEvent<HTMLInputElement>
+  ) => {
+    const target = e.target as HTMLInputElement;
+    setCreateAccountInputValues(prev => ({ ...prev, [inputKey]: target.value }));
+    setCreateAccountErrorMessage('');
   };
 
   const contextValues = {
     // states
     loginInputValues: loginInputValues,
-    errorMessage: errorMessage,
+    createAccountInputValues: createAccountInputValues,
+    loginErrorMessage: loginErrorMessage,
+    createAccountErrorMessage: createAccountErrorMessage,
     // setters
-    setErrorMessage: setErrorMessage,
+    setLoginInputValues: setLoginInputValues,
+    setLoginErrorMessage: setLoginErrorMessage,
+    setCreateAccountErrorMessage: setCreateAccountErrorMessage,
     // functions
     handleLoginReset: handleLoginReset,
-    handleEmailInput: handleEmailInput,
-    handlePasswordInput: handlePasswordInput,
+    handleCreateAccountReset: handleCreateAccountReset,
+    handleLoginInputOnChange: handleLoginInputOnChange,
+    handleCreateAccountInputOnChange: handleCreateAccountInputOnChange,
   };
 
   return <LoginContext.Provider value={contextValues}>{children}</LoginContext.Provider>;
