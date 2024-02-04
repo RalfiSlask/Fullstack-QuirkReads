@@ -1,8 +1,9 @@
 import { FormEvent, useContext } from 'react';
 import ResetButton from './ResetButton';
-import SubmitButton from './SubmitButton';
+import SubmitButton from '../../shared/SubmitButton';
 import { LoginContext } from '../../../context/LoginContext';
 import { useNavigate } from 'react-router-dom';
+import LoginInput from './LoginInput';
 
 const LoginForm = () => {
   const loginContext = useContext(LoginContext);
@@ -12,8 +13,7 @@ const LoginForm = () => {
     return;
   }
 
-  const { loginInputValues, errorMessage, setErrorMessage, handleLoginReset, handleEmailInput, handlePasswordInput } =
-    loginContext;
+  const { loginInputValues, setLoginErrorMessage, handleLoginReset } = loginContext;
 
   const postLoginUser = async () => {
     try {
@@ -25,14 +25,14 @@ const LoginForm = () => {
         body: JSON.stringify(loginInputValues),
       });
       if (!response.ok) {
-        setErrorMessage('user does not exist');
+        setLoginErrorMessage('user does not exist');
         return;
       }
       const jsonData = await response.json();
       if (jsonData.id) {
         localStorage.setItem('userId', jsonData.id);
         handleLoginReset();
-        setErrorMessage('');
+        setLoginErrorMessage('');
         navigate('/library');
       }
       console.log(jsonData);
@@ -53,35 +53,11 @@ const LoginForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-[300px]">
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-center">
-            <label htmlFor="email">Email</label>
-            <p className="text-red-500">{errorMessage}</p>
-          </div>
-
-          <input
-            onInput={handleEmailInput}
-            type="text"
-            spellCheck="false"
-            id="email"
-            placeholder="Email"
-            className=" input"
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="password">Password</label>
-          <input
-            onInput={handlePasswordInput}
-            type="password"
-            spellCheck="false"
-            id="password"
-            placeholder="Password"
-            className="input"
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-[300px] items-center">
+        <LoginInput type="text" text="email" inputKey="email" />
+        <LoginInput type="password" text="password" inputKey="password" />
         <div className="flex justify-center gap-4">
-          <SubmitButton />
+          <SubmitButton title={'Submit'} />
           <ResetButton />
         </div>
       </form>
