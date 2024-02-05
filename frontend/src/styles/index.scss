@@ -6,11 +6,21 @@
 @import './variables/variables';
 
 body,
-:root {
+:root,
+#root {
   background-color: $primary;
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+ul {
+  font-family: 'Roboto', sans-serif;
+}
+
+h1,
+h2 {
+  font-family: 'Playfair Display', serif;
 }
 
 .button-primary {
