@@ -2,18 +2,16 @@ import { FormEvent, useContext } from 'react';
 import ResetButton from './ResetButton';
 import SubmitButton from '../../shared/SubmitButton';
 import { LoginContext } from '../../../context/LoginContext';
-import { useNavigate } from 'react-router-dom';
 import LoginInput from './LoginInput';
 
 const LoginForm = () => {
   const loginContext = useContext(LoginContext);
-  const navigate = useNavigate();
 
   if (!loginContext) {
     return;
   }
 
-  const { loginInputValues, setLoginErrorMessage, handleLoginReset } = loginContext;
+  const { loginInputValues, setLoginErrorMessage, closeModalOnClick, setUserName } = loginContext;
 
   const postLoginUser = async () => {
     try {
@@ -30,10 +28,10 @@ const LoginForm = () => {
       }
       const jsonData = await response.json();
       if (jsonData.id) {
-        localStorage.setItem('userId', jsonData.id);
-        handleLoginReset();
+        localStorage.setItem('user', JSON.stringify({ id: jsonData.id, name: jsonData.name }));
+        closeModalOnClick();
         setLoginErrorMessage('');
-        navigate('/library');
+        setUserName(jsonData.name);
       }
       console.log(jsonData);
     } catch (err) {
