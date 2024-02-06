@@ -18,86 +18,61 @@ router.get('/', function (req, res) {
  */
 router.post('/add', (req, res) => {
   const sentProducts = req.body.products;
-  req.app.locals.db
-    .collection('users')
+  const db = req.app.locals.db;
+  db.collection('users')
     .findOne({ id: req.body.user })
     .then((user) => {
       if (!user) {
         console.log('user was not found');
         return res.status(404).json({ err: 'user was not found' });
       }
-      // get all products
-      req.app.locals.db
-        .collection('products')
-        .find()
-        .toArray()
-        .then((storedProductsData) => {
-          if (storedProductsData.length <= 0) {
-            console.log('products does not exist');
-            res.status(500).json('could not find products');
-          }
-          // converting products to an array with product ids
-          const storedProductIds = storedProductsData.map(
-            (product) => product.id
-          );
-          const sentProductsIds = sentProducts.map(
-            (product) => product.productId
-          );
-          const sentProductQuantities = sentProducts.map(
-            (product) => product.quantity
-          );
-          console.log(sentProductsIds, sentProductQuantities);
-          // Checks if the order products are the same as in stock
-          const isProductsValid = sentProducts.every((sentProduct) =>
-            storedProductIds.includes(sentProduct.productId)
-          );
-          if (!isProductsValid) {
-            console.log('some product ids are faulty');
-            return res.status(404).json({ err: 'products does not exist' });
-          }
-          // updates the products lager according to each orders quantity
-          const bulkOperation = sentProducts.map((product) => {
-            return {
-              updateOne: {
-                filter: { id: product.productId },
-                update: {
-                  $inc: { lager: -1 * product.quantity },
-                },
-              },
-            };
-          });
-          req.app.locals.db
-            .collection('products')
-            .bulkWrite(bulkOperation)
-            .then((update) => {
-              if (update.matchedCount === 0) {
-                console.log('update failed');
-                return res.status(500).json({ err: 'update failed' });
-              }
-              // inserts the order in the database
-              req.app.locals.db
-                .collection('orders')
-                .insertOne(req.body)
-                .then((insertedResults) => {
-                  console.log('added order', req.body);
-                  res.json({
-                    insertInfo: insertedResults,
-                    order: req.body,
-                    bulkInfo: update,
-                  });
-                })
-                .catch((err) => {
-                  console.log(err, 'could not add order');
-                  res.status(500).json({ err: 'could not add order' });
-                });
-            });
+      return db.collection('products').find().toArray();
+    })
+    // get all products
+    .then((storedProductsData) => {
+      if (storedProductsData.length <= 0) {
+        console.log('products does not exist');
+        res.status(500).json('could not find products');
+      }
+      // converting products to an array with product ids
+      const storedProductIds = storedProductsData.map((product) => product.id);
+      // Checks if the order products are the same as in stock
+      const isProductsValid = sentProducts.every((sentProduct) =>
+        storedProductIds.includes(sentProduct.productId)
+      );
+      if (!isProductsValid) {
+        console.log('some product ids are faulty');
+        return res.status(404).json({ err: 'products does not exist' });
+      }
 
-          // insert the order in database
-        })
-        .catch((err) => {
-          console.log(err, 'server error could not find products');
-          res.status(500).json({ err: 'could not find products, error' });
-        });
+      // updates the products lager according to each orders quantity
+      const bulkOperation = sentProducts.map((product) => {
+        return {
+          updateOne: {
+            filter: { id: product.productId },
+            update: {
+              $inc: { lager: -1 * product.quantity },
+            },
+          },
+        };
+      });
+
+      return db.collection('products').bulkWrite(bulkOperation);
+    })
+    .then((update) => {
+      if (update.matchedCount === 0) {
+        console.log('update failed');
+        return res.status(500).json({ err: 'update failed' });
+      }
+
+      return db.collection('orders').insertOne(req.body);
+    })
+    .then((insertedResults) => {
+      console.log('added order', req.body);
+      res.json({
+        insertInfo: insertedResults,
+        order: req.body,
+      });
     })
     .catch((err) => {
       console.log(err, 'could not process get request');
@@ -122,7 +97,8 @@ router.post('/user', (req, res) => {
 
   req.app.locals.db
     .collection('orders')
-    .findOne({ user: req.body.user })
+    .find({ user: req.body.user })
+    .toArray()
     .then((user) => {
       if (user) {
         console.log(user);
