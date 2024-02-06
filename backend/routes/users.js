@@ -30,10 +30,12 @@ router.get('/', function (req, res) {
 /**
  * Sends back whole user object if provided id matches a stored user id
  */
-router.post('/:id', (req, res) => {
+
+router.post('/', (req, res) => {
+  console.log(req.body);
   req.app.locals.db
     .collection('users')
-    .findOne({ id: req.params.id })
+    .findOne({ id: req.body.id })
     .then((user) => {
       if (user) {
         console.log('can find user');
@@ -54,9 +56,9 @@ router.post('/:id', (req, res) => {
  * Checks if user email already exists, if it does exists method
  */
 router.post('/add', (req, res) => {
+  const db = req.app.locals.db;
   const { name, email, password } = req.body;
-  req.app.locals.db
-    .collection('users')
+  db.collection('users')
     .findOne({ email: email })
     .then((emailMatches) => {
       if (emailMatches) {
@@ -69,26 +71,24 @@ router.post('/add', (req, res) => {
         process.env.SALT_KEY
       );
       console.log(encryptedPassword);
-      req.app.locals.db
-        .collection('users')
-        .insertOne({
-          id: uuidv4(),
-          name: name,
-          email: email,
-          password: encryptedPassword,
-        })
-        .then((insertResult) => {
-          if (insertResult.acknowledged) {
-            console.log('sent user', req.body);
-            res.status(201).json({ user: name, email: email });
-          } else {
-            res.status(500).json({ err: 'could not add user' });
-          }
-        })
-        .catch((err) => {
-          console.log(err, 'could not add user');
-          res.status(500).json({ err: 'could not add user' });
-        });
+      return db.collection('users').insertOne({
+        id: uuidv4(),
+        name: name,
+        email: email,
+        password: encryptedPassword,
+      });
+    })
+    .then((insertResult) => {
+      if (insertResult.acknowledged) {
+        console.log('sent user', req.body);
+        res.status(201).json({ user: name, email: email });
+      } else {
+        res.status(500).json({ err: 'could not add user' });
+      }
+    })
+    .catch((err) => {
+      console.log(err, 'could not add user');
+      res.status(500).json({ err: 'could not add user' });
     });
 });
 
@@ -105,14 +105,14 @@ router.post('/login', (req, res) => {
       if (!loginMailMatches) {
         return res.status(401).json({ err: 'Invalid login info' });
       }
-      const { id, password } = loginMailMatches;
+      const { id, password, name } = loginMailMatches;
       const storedPasswordDecrypted = getDecryptedData(
         password,
         process.env.SALT_KEY
       );
       if (req.body.password === storedPasswordDecrypted) {
         console.log('Login is a success, sending user id', id);
-        res.json({ id: id });
+        res.json({ id: id, name: name });
       } else {
         console.log('cant login');
         res.status(401).json({ err: 'Invalid login info' });
