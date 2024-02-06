@@ -28,7 +28,7 @@
 
 ### Products
 
-1. Modify: Create product - If no token = 401
+1. Modify: Create product - If no token = 401 \*
 2. Get products from category \*
 3. Create category \*
 4. Get all categories \*
@@ -36,5 +36,5 @@
 ### Orders
 
 1. Modify: Get all orders - If no key no access to orders \*
-2. Modify: Add order for specific user - dynamic user id
+2. Modify: Add order for specific user - dynamic user id \*
 3. Get orders for specific user - no key will result in no access \*
