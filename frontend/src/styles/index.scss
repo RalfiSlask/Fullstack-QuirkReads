@@ -30,3 +30,11 @@ h2 {
 .input {
   @apply rounded-md pl-2 py-2 border-2 border-solid border-primaryBtn-border placeholder:text-gray-400;
 }
+
+.openCart {
+  @apply translate-x-0 duration-500;
+}
+
+.cart {
+  @apply translate-x-[400px] duration-500 transform;
+}
