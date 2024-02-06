@@ -1,6 +1,6 @@
 # Checklist
 
-## G-TESTS
+## G
 
 ### Users
 
@@ -20,7 +20,7 @@
 1. Add order for specific user \*
 2. Get all orders \*
 
-## VG-TESTS
+## VG
 
 ### Users
 
@@ -38,3 +38,29 @@
 1. Modify: Get all orders - If no key no access to orders \*
 2. Modify: Add order for specific user - dynamic user id \*
 3. Get orders for specific user - no key will result in no access \*
+
+## VG-TESTS
+
+### Users
+
+- get all users - works!
+- get specific user - works!
+- create user - works!
+- login user - works!
+
+### Products
+
+- get all products - works!
+- get specific product - works!
+- create product - works!
+
+### Categories
+
+- Create Category - works!
+- Get all categories - works!
+
+### Orders
+
+- Get all orders - works!
+- Create order - works!
+- Get orders from a user - works!
