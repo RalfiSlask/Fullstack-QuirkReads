@@ -48,7 +48,6 @@ router.get('/:id', (req, res) => {
  * Gets all products under a specific category based on its id
  */
 router.get('/category/:id', (req, res) => {
-  console.log(req.params.id);
   req.app.locals.db
     .collection('products')
     .find({ category: req.params.id })
@@ -73,7 +72,7 @@ router.get('/category/:id', (req, res) => {
  */
 router.post('/add', (req, res) => {
   const { name, description, price, lager, category, token } = req.body;
-
+  const db = req.app.locals.db;
   if (token !== process.env.TOKEN) {
     console.log('not authorized');
     res.status(401).json({ message: 'not authorized to add book' });
@@ -89,8 +88,7 @@ router.post('/add', (req, res) => {
     category: category,
     id: newId,
   };
-  req.app.locals.db
-    .collection('products')
+  db.collection('products')
     .findOne({ name: name, description: description })
     .then((productResults) => {
       if (productResults) {
@@ -98,22 +96,16 @@ router.post('/add', (req, res) => {
         res.json({ err: 'book already exists' });
         return;
       }
-      req.app.locals.db
-        .collection('products')
-        .insertOne(insertedProduct)
-        .then((insertResult) => {
-          // if insertOne operation goes through
-          if (insertResult.acknowledged) {
-            console.log('sent product:', insertedProduct);
-            res.json(insertedProduct);
-          } else {
-            res.status(500).json({ err: 'could not add product' });
-          }
-        })
-        .catch((err) => {
-          console.log(err, 'could not add product');
-          res.status(500).json({ err: 'could not add product' });
-        });
+      return db.collection('products').insertOne(insertedProduct);
+    })
+    .then((insertResult) => {
+      // if insertOne operation goes through
+      if (insertResult.acknowledged) {
+        console.log('sent product:', insertedProduct);
+        res.json(insertedProduct);
+      } else {
+        res.status(500).json({ err: 'could not add product' });
+      }
     })
     .catch((err) => {
       console.log(err, 'cant find product');
