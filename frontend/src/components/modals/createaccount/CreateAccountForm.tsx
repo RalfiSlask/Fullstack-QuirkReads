@@ -34,7 +34,6 @@ const CreateAccountForm = () => {
         return;
       }
       const jsonData = await response.json();
-      console.log(jsonData);
       if (jsonData) {
         handleCreateAccountReset();
         setCreateAccountErrorMessage('');

@@ -33,7 +33,6 @@ const LoginForm = () => {
         setLoginErrorMessage('');
         setUserName(jsonData.name);
       }
-      console.log(jsonData);
     } catch (err) {
       console.log(err, 'could not post user');
     }
