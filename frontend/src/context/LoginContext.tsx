@@ -12,11 +12,15 @@ interface ILoginTypes {
   loginModals: IModalType;
   userName: string;
   userId: string;
-  userOrder: IOrderType;
+  userOrder: IOrderType[];
+  cartOrders: IOrderType;
+  isOrderPlaced: boolean;
   // setters
+  setCartOrders: React.Dispatch<React.SetStateAction<IOrderType>>;
   setLoginErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setCreateAccountErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setUserName: React.Dispatch<React.SetStateAction<string>>;
+  setIsOrderPlaced: React.Dispatch<React.SetStateAction<boolean>>;
   // functions
   handleLoginReset: () => void;
   handleCreateAccountReset: () => void;
@@ -28,6 +32,7 @@ interface ILoginTypes {
   changeStateOfModal: (key: keyof IModalType, state: boolean) => void;
   handleCreateAnAccountOnClick: () => void;
   closeModalOnClick: () => void;
+  addProductToCart: (quantity: number, productId: string) => void;
 }
 
 interface ILoginType {
@@ -47,12 +52,29 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
   });
   const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState('');
-  const [userOrder, setUserOrder] = useState<IOrderType>({ user: '', products: [] });
+  const [userOrder, setUserOrder] = useState<IOrderType[]>([{ user: '', products: [] }]);
+  const [cartOrders, setCartOrders] = useState<IOrderType>({ user: '', products: [] });
+  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
   const token = import.meta.env.VITE_TOKEN;
 
-  const addProductToOrder = () => {
-    setUserOrder(prev => ({ ...prev, products: [...prev.products, { productId: '1', quantity: 2 }] }));
+  const addProductToCart = (quantity: number, productId: string) => {
+    const productExistInCart = cartOrders.products.some(product => product.productId === productId);
+    if (quantity <= 0) {
+      console.log('no product quantity');
+      return;
+    }
+
+    if (productExistInCart) {
+      console.log('already exist in cart');
+      return;
+    }
+
+    setCartOrders(prev => ({
+      ...prev,
+      products: [...prev.products, { productId: productId, quantity: quantity }],
+    }));
+    setIsOrderPlaced(false);
   };
 
   useEffect(() => {
@@ -62,11 +84,6 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
       setUserId(JSON.parse(storedUser).id);
     }
   }, [userName]);
-
-  useEffect(() => {
-    console.log('userId', userId);
-    console.log('order:', userOrder);
-  }, [userId, userOrder]);
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -83,6 +100,7 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
       if (response.ok) {
         const jsonData = await response.json();
         setUserOrder(jsonData);
+        setCartOrders(prev => ({ ...prev, user: userId }));
       }
     } catch (err) {
       console.log(err, 'could not fetch orders');
@@ -153,7 +171,11 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
     userName: userName,
     userId: userId,
     userOrder: userOrder,
+    cartOrders: cartOrders,
+    isOrderPlaced: isOrderPlaced,
     // setters
+    setIsOrderPlaced: setIsOrderPlaced,
+    setCartOrders: setCartOrders,
     setUserName: setUserName,
     setLoginInputValues: setLoginInputValues,
     setLoginErrorMessage: setLoginErrorMessage,
@@ -166,6 +188,7 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
     changeStateOfModal: changeStateOfModal,
     handleCreateAnAccountOnClick: handleCreateAnAccountOnClick,
     closeModalOnClick: closeModalOnClick,
+    addProductToCart: addProductToCart,
   };
 
   return <LoginContext.Provider value={contextValues}>{children}</LoginContext.Provider>;
