@@ -14,8 +14,7 @@ const Category: React.FC<CategoryProps> = ({ name, id, books }) => {
   useEffect(() => {
     const filterByCategory = books?.filter(book => book.category === id);
     setBooksByCategory(filterByCategory);
-    console.log(filterByCategory);
-  }, []);
+  }, [books, id]);
 
   return (
     <div className="flex flex-col gap-4">
