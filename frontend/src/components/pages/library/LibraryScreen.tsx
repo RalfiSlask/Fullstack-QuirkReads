@@ -1,64 +1,37 @@
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import Header from './Header';
-import { IBookType, ICategoryType } from '../../../utils/types';
 import Category from './Category';
 import Sidebar from './Sidebar';
-import SidebarColor from './SidebarColor';
+import SidebarColor from '../../ui/SidebarColor';
+import CartSidebar from './CartSidebar';
+import { LoginContext } from '../../../context/LoginContext';
+import LightBox from '../../ui/LightBox';
+import LoginModal from '../../modals/login/LoginModal';
+import CreateAccountModal from '../../modals/createaccount/CreateAccountModal';
+import OrderModal from '../../modals/orders/OrderModal';
+import { LibraryContext } from '../../../context/LibraryContext';
 
 const LibraryScreen = () => {
-  const [books, setBooks] = useState<IBookType[]>();
-  const [categories, setCategories] = useState<ICategoryType[]>();
+  const loginContext = useContext(LoginContext);
+  const libraryContext = useContext(LibraryContext);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/categories');
-      if (!response.ok) {
-        return;
-      }
-      const jsonData = await response.json();
-      console.log(jsonData);
-      setCategories(jsonData);
-    } catch (err) {
-      console.log('could not fetch categories');
-    }
-  };
+  if (!loginContext || !libraryContext) {
+    return;
+  }
 
-  const fetchBooks = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/products');
-      if (!response.ok) {
-        return;
-      }
-
-      const jsonData = await response.json();
-      setBooks(jsonData);
-    } catch (err) {
-      console.log('could not fetch products');
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetchCategories();
-        await fetchBooks();
-      } catch (err) {
-        console.log(err, 'error fetching data');
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    console.log(books);
-  }, [books]);
+  const { loginModals } = loginContext;
+  const { categories, books } = libraryContext;
 
   return (
     <div className="w-full flex flex-col items-center">
       <Header />
       <SidebarColor />
       <Sidebar />
+      <CartSidebar />
+      {loginModals.lightbox && <LightBox />}
+      {loginModals.login && <LoginModal />}
+      {loginModals.create && <CreateAccountModal />}
+      {loginModals.order && <OrderModal />}
       <main className="w-full pl-[400px] pr-[50px] pt-[120px] pb-[100px] flex flex-col">
         <section className="w-full flex justify-between flex-wrap max-w-[1000px]">
           {categories && books ? (
