@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import Header from './Header';
-import Category from './Category';
+import uuid from 'react-uuid';
 import Sidebar from './Sidebar';
 import SidebarColor from '../../ui/SidebarColor';
 import CartSidebar from './CartSidebar';
@@ -10,6 +10,7 @@ import LoginModal from '../../modals/login/LoginModal';
 import CreateAccountModal from '../../modals/createaccount/CreateAccountModal';
 import OrderModal from '../../modals/orders/OrderModal';
 import { LibraryContext } from '../../../context/LibraryContext';
+import BookComponent from './BookComponent';
 
 const LibraryScreen = () => {
   const loginContext = useContext(LoginContext);
@@ -20,7 +21,7 @@ const LibraryScreen = () => {
   }
 
   const { loginModals } = loginContext;
-  const { categories, books } = libraryContext;
+  const { books } = libraryContext;
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -33,15 +34,15 @@ const LibraryScreen = () => {
       {loginModals.create && <CreateAccountModal />}
       {loginModals.order && <OrderModal />}
       <main className="w-full pl-[400px] pr-[50px] pt-[120px] pb-[100px] flex flex-col">
-        <section className="w-full flex justify-between flex-wrap max-w-[1000px]">
-          {categories && books ? (
-            categories.map(category => {
-              const { id, name } = category;
-              return <Category key={id} name={name} id={id} books={books} />;
+        <section className="w-full flex justify-between flex-wrap max-w-[1000px] gap-x-4 gap-y-6">
+          {books ? (
+            books?.map(book => {
+              return <BookComponent key={uuid()} bookInfo={book} />;
             })
           ) : (
-            <p>Loading</p>
+            <h2 className="text-xl">Loading</h2>
           )}
+          {books?.length === 0 && <h2 className="text-xl">No products in this category, please add!</h2>}
         </section>
       </main>
     </div>
