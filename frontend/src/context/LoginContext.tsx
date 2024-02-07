@@ -33,6 +33,7 @@ interface ILoginTypes {
   handleCreateAnAccountOnClick: () => void;
   closeModalOnClick: () => void;
   addProductToCart: (quantity: number, productId: string) => void;
+  deleteProductFromCart: (productId: string) => void;
 }
 
 interface ILoginType {
@@ -75,6 +76,14 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
       products: [...prev.products, { productId: productId, quantity: quantity }],
     }));
     setIsOrderPlaced(false);
+  };
+
+  const deleteProductFromCart = (productId: string) => {
+    setCartOrders(prev => {
+      const array = [...prev.products];
+      const filteredArray = array.filter(product => product.productId !== productId);
+      return { ...prev, products: filteredArray };
+    });
   };
 
   useEffect(() => {
@@ -189,6 +198,7 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
     handleCreateAnAccountOnClick: handleCreateAnAccountOnClick,
     closeModalOnClick: closeModalOnClick,
     addProductToCart: addProductToCart,
+    deleteProductFromCart: deleteProductFromCart,
   };
 
   return <LoginContext.Provider value={contextValues}>{children}</LoginContext.Provider>;
