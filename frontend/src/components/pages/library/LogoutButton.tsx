@@ -8,11 +8,12 @@ const LogoutButton = () => {
     return;
   }
 
-  const { setUserName } = loginContext;
+  const { setUserName, setCartOrders } = loginContext;
 
   const handleClickOnLogout = () => {
     setUserName('');
     localStorage.removeItem('user');
+    setCartOrders({ user: '', products: [] });
   };
 
   return (

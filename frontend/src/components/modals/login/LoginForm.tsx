@@ -11,7 +11,7 @@ const LoginForm = () => {
     return;
   }
 
-  const { loginInputValues, setLoginErrorMessage, closeModalOnClick, setUserName } = loginContext;
+  const { loginInputValues, setLoginErrorMessage, closeModalOnClick, setUserName, setCartOrders } = loginContext;
 
   const postLoginUser = async () => {
     try {
@@ -32,6 +32,7 @@ const LoginForm = () => {
         closeModalOnClick();
         setLoginErrorMessage('');
         setUserName(jsonData.name);
+        setCartOrders(prev => ({ ...prev, user: jsonData.id }));
       }
     } catch (err) {
       console.log(err, 'could not post user');

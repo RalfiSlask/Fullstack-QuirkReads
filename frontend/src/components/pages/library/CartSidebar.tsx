@@ -14,7 +14,7 @@ const CartSidebar = () => {
   }
 
   const { cartState, handleCartStateOnClick, fetchBooks, fetchCategories } = libraryContext;
-  const { cartOrders, setCartOrders, isOrderPlaced, setIsOrderPlaced } = loginContext;
+  const { cartOrders, setCartOrders, isOrderPlaced, setIsOrderPlaced, userName } = loginContext;
 
   const postOrder = async () => {
     try {
@@ -39,12 +39,12 @@ const CartSidebar = () => {
   };
 
   const handleClickOnPostOrder = async () => {
-    if (cartOrders.products.length <= 0) {
+    if (cartOrders.products.length <= 0 || userName === '') {
       console.log('cant post order');
       return;
     }
     await postOrder();
-    setCartOrders({ user: '', products: [] });
+    setCartOrders(prev => ({ ...prev, products: [] }));
     setIsOrderPlaced(true);
   };
 
@@ -82,11 +82,14 @@ const CartSidebar = () => {
           </div>
         </div>
 
-        {isOrderPlaced && (
+        {isOrderPlaced && cartOrders.user !== '' && (
           <div className="flex flex-col items-center gap-2 mt-[100px]">
             <h2 className="text-4xl text-center">Order is placed</h2>
             <p className="text-lg">It is on its way!</p>
           </div>
+        )}
+        {cartOrders.user === '' && (
+          <h2 className="text-red-500 text-xl text-center mt-[100px]">You have to login before placing order</h2>
         )}
       </div>
 
