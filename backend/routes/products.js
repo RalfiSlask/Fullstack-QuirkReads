@@ -57,8 +57,8 @@ router.get('/category/:id', (req, res) => {
         console.log('products', products);
         res.json(products);
       } else {
-        console.log(err, 'could not find products');
-        res.status(404).json({ err: 'could not find products' });
+        console.log('no products attached to category');
+        res.json([]);
       }
     })
     .catch((err) => {
