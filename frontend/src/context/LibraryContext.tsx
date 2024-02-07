@@ -8,10 +8,14 @@ interface ILibraryTypes {
   cartState: boolean;
   books: IBookType[] | undefined;
   categories: ICategoryType[] | undefined;
+  //setters
+  setCategoryClicked: React.Dispatch<React.SetStateAction<string>>;
   // functions
   handleCartStateOnClick: (state: boolean) => void;
   fetchBooks: () => Promise<void>;
   fetchCategories: () => Promise<void>;
+  handleClickOnCategory: (category: string) => void;
+  handleClickOnAll: () => void;
 }
 
 interface ILibraryType {
@@ -27,6 +31,35 @@ export const LibraryContextProvider: React.FC<ILibraryType> = ({ children }) => 
 
   const [books, setBooks] = useState<IBookType[]>();
   const [categories, setCategories] = useState<ICategoryType[]>();
+  const [categoryClicked, setCategoryClicked] = useState('All');
+
+  const handleClickOnCategory = async (category: string) => {
+    setCategoryClicked(category);
+  };
+
+  const handleClickOnAll = () => {
+    setCategoryClicked('All');
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (categoryClicked === 'All') {
+        try {
+          await fetchBooks();
+        } catch (err) {
+          console.log(err, 'error fetching data');
+        }
+      } else {
+        try {
+          await fetchProductsByCategory();
+        } catch (err) {
+          console.log(err, 'error fetching data');
+        }
+      }
+    };
+
+    fetchData();
+  }, [categoryClicked]);
 
   const fetchCategories = async () => {
     try {
@@ -34,10 +67,28 @@ export const LibraryContextProvider: React.FC<ILibraryType> = ({ children }) => 
       if (!response.ok) {
         return;
       }
+
       const jsonData = await response.json();
-      setCategories(jsonData);
+      if (jsonData) {
+        setCategories(jsonData);
+      }
     } catch (err) {
       console.log('could not fetch categories');
+    }
+  };
+
+  const fetchProductsByCategory = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/products/category/${categoryClicked}`);
+      if (!response.ok) {
+        return;
+      }
+      const jsonData = await response.json();
+      if (jsonData) {
+        setBooks(jsonData);
+      }
+    } catch (err) {
+      console.log('could not fetch products');
     }
   };
 
@@ -70,15 +121,27 @@ export const LibraryContextProvider: React.FC<ILibraryType> = ({ children }) => 
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (books === undefined) {
+      return;
+    }
+    console.log(books);
+  }, [books]);
+
   const contextValues = {
     // states
     cartState: cartState,
     books: books,
     categories: categories,
+
+    // setters
+    setCategoryClicked: setCategoryClicked,
     // functions
     handleCartStateOnClick: handleCartStateOnClick,
     fetchBooks: fetchBooks,
     fetchCategories: fetchCategories,
+    handleClickOnCategory: handleClickOnCategory,
+    handleClickOnAll: handleClickOnAll,
   };
 
   return <LibraryContext.Provider value={contextValues}>{children}</LibraryContext.Provider>;
