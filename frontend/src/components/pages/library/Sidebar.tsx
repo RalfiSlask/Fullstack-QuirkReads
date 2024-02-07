@@ -2,15 +2,24 @@ import { useContext } from 'react';
 import LogoutButton from './LogoutButton';
 import UserComponent from './UserComponent';
 import { LoginContext } from '../../../context/LoginContext';
+import { LibraryContext } from '../../../context/LibraryContext';
+import SidebarCategory from './SidebarCategory';
+import uuid from 'react-uuid';
+import searchLogo from '../../../assets/icons/search.svg';
+import ordersLogo from '../../../assets/icons/orders.svg';
+import homeLogo from '../../../assets/icons/home.svg';
+import categoriesLogo from '../../../assets/icons/categories.svg';
 
 const Sidebar = () => {
   const loginContext = useContext(LoginContext);
+  const libraryContext = useContext(LibraryContext);
 
-  if (!loginContext) {
+  if (!loginContext || !libraryContext) {
     return;
   }
 
   const { userName, changeStateOfModal } = loginContext;
+  const { categories, handleClickOnAll } = libraryContext;
 
   const openOrderModalOnClick = () => {
     changeStateOfModal('lightbox', true);
@@ -22,12 +31,38 @@ const Sidebar = () => {
       <UserComponent />
       <div className="flex flex-col justify-between h-full w-full">
         <ul className="flex flex-col gap-2 text-xl ">
-          <li className="hover:text-primaryBtn cursor-pointer">Home</li>
-          <li className="hover:text-primaryBtn cursor-pointer">Search</li>
-          <li onClick={openOrderModalOnClick} className="hover:text-primaryBtn cursor-pointer">
-            My Orders
-          </li>
+          <div className="flex items-center gap-4">
+            <img src={homeLogo} alt="home icon" width="30" height="30" />
+            <li className="hover:text-primaryBtn cursor-pointer">Home</li>
+          </div>
+          <div className="flex items-center gap-4">
+            <img src={searchLogo} alt="search icon" width="30" height="30" />
+            <li className="hover:text-primaryBtn cursor-pointer">Search</li>
+          </div>
+          {userName.length > 0 && (
+            <div className="flex items-center gap-4">
+              <img src={ordersLogo} alt="orders icon" width="30" height="30" />
+              <li onClick={openOrderModalOnClick} className="hover:text-primaryBtn cursor-pointer">
+                My Orders
+              </li>
+            </div>
+          )}
         </ul>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-4">
+            <img src={categoriesLogo} alt="search icon" width="30" height="30" />
+            <li className=" text-xl list-none">Categories</li>
+          </div>
+          <ul>
+            <li onClick={handleClickOnAll} className="text-lg cursor-pointer hover:text-primaryBtn">
+              All
+            </li>
+            {categories?.map(category => {
+              return <SidebarCategory key={uuid()} category={category.name} categoryId={category.id} />;
+            })}
+          </ul>
+        </div>
+
         <div className="flex flex-col gap-8 items-start">
           <ul className="flex flex-col gap-2 text-lg">
             <li>About</li>
