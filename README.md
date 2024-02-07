@@ -1,50 +1,62 @@
-# Du har fått i uppdrag att utveckla API’et till en webbshop.
+# Fullstack Webshop QuirkReads
 
-En lösningsarkitekt har redan dokumenterat vilka endpoints som skall finnas för API’et samt skrivit ett test flöde med REST-Client som ni kan börja utveckal med. Dvs vilka endpoints och vad de skall heta samt vad de förväntas returnera är redan förutbestämt. 
+## Tech Stacks
 
-För att testerna skall fungera behöver ni Rest-Client (extension) installerat till vsc.
+### Frontend
 
-För G krav så räcker det att de endpoints markerade med G fungerar. 
+- HTML5
+- Typescript
+- React
+- Tailwind CSS
+- Sass
 
-För VG behöver även de endpoints markerade med VG fungera. För VG så skall även en frontend klient för projektet skapas där minst endpointsen för G kraven används (se nedan för en lista av vilka krav som specifieras för klienten). 
-Dvs, för betyget G behöver ingen frontend skapas.
+### Backend
 
-Projektet ni klonar har förutom test-rest filerna förberett även en mapp för backend, där ni kan installera express på valfritt sätt. Samt en mapp för frontend där ni kan skapa er frontend klient på valfritt sätt. 
+- MongoDB
+- Express.JS
 
-All data skall sparas i en lokal MongoDB databas. Döp databasen enligt “fornamn-efternamn”.
+### Build Tools
 
-Det är helt ok att skapa alla produkter med “mock” data, samt att för designens skull använda en “placeholder”-bild för produkterna, dvs att alla produkter har samma bild.
+- Vite
+- Express generator
 
+## Formatting
 
-### Skillnader mellan G och VG krav:
+This projects uses code standars by appling the dependecies eslint and prettier tools:
 
-För kravet G så behöver inte anänvdarens lösenord krypteras. 
+- **Eslint**: identifies bugs and patterns to make the code more consistent
+- **Prettier**: code formatter
 
-För VG så behöver användarens lösenord i endpointen krypteras innan det sparas i databasen. Samt så skall alla administratörs endpoints skyddas med en API nyckel, dvs om inte rätt nyckel skickas med i POST body, eller som param i GET, så skall inte anropet hanteras av servern utan istället svara med en statuskod 401 (unauthorized) och lämna ett passande medelande ({“message”: “Not Authorized”). 
+## Status
 
+This project is marked as "In Progress"
 
+## Getting Started
 
-OBS! Spara aldrig API nyckeln i databasen när du tex sparar en order eller en ny kategori.
+To run the Quirk Reads webapp on you local machine, follow these steps:
 
-Hårdkoda heller inte in nyckeln någonstans i backend, tänk på att nyckeln skall enkelt kunna ändras vid behov. Tex via en global variabel, eller en .env variabel.
+1. Download or clone the repository.
+2. Install the necessary dependencies by running `npm install`.
+3. Start the frontend application using `npm run dev`-
+4. Start the backend using `nodemon start` or `node start`.
+5. Setup envs according to example.env.
+6. Connect to mongoDB database.
 
-Skapar du en .env fil för projektet så skicka med ett exempel på env filen döpt till “example.env”.
+## App Description
 
-För G nivå så behöver inte produkter sparas i kategorier. För VG så behöver kategorier kunna skapas och produkter sparas i olika kategorier.
+The Quirks Reads web application is simulating a webshop for books.
 
+### Features
 
+- **Login form**: User can login with stored password and mail.
+- **Create account**: User can create a new account with password, email and name.
+- **Cart**: Features a cart.
+- **Purchase books**: User can add books to cart.
+- **Place Order**: User can place an order for the books in cart.
+- **View orders**: User can view placed orders.
+- **Filter by categories**: User can filter books by categories.
 
-### Frontend klienten skall kunna (VG krav):
+## Author
 
-Skapa en ny användare samt logga in
-Lösenordet skall krypteras
-Se vilka produkter som finns i butiken, fördelat på olika kategorier. 
-På varje produkt så skall grundläggande info som pris, namn och bild (placeholder) visas.
-Kunna lägga en produkt i en kundvagn
-Skicka en order med alla produkter från kundvagnen
-Kunna se en sida med alla sina skapade orders, samt vilka produkter en order innehåller.
-Lämna in länken till ert skapde repo när ni är färidga. Skriv även ett meddelande om ni önskar att bli testade mot G eller VG kraven.
-
-Lycka till!
-
-Kom ihåg att comitta och pusha ofta!
+- Frontend Mentor - [@RalfiSlask](https://www.frontendmentor.io/profile/RalfiSlask)
+- GitHub - [RalfiSlask](https://github.com/RalfiSlask)
