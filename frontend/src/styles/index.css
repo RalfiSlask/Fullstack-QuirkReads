@@ -137,11 +137,22 @@ table {
 }
 
 body,
-:root {
+:root,
+#root {
   background-color: #f2f2f2;
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+ul,
+li {
+  font-family: "Roboto", sans-serif;
+}
+
+h1,
+h2 {
+  font-family: "Playfair Display", serif;
 }
 
 .button-primary {
@@ -150,4 +161,12 @@ body,
 
 .input {
   @apply rounded-md pl-2 py-2 border-2 border-solid border-primaryBtn-border placeholder:text-gray-400;
+}
+
+.openCart {
+  @apply translate-x-0 duration-500;
+}
+
+.cart {
+  @apply translate-x-[400px] duration-500 transform;
 }/*# sourceMappingURL=index.css.map */
