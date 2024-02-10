@@ -3,7 +3,6 @@ import { LibraryContext } from '../../../context/LibraryContext';
 import closeLogo from '../../../assets/icons/delete.svg';
 import { LoginContext } from '../../../context/LoginContext';
 import CartProduct from './CartProduct';
-import uuid from 'react-uuid';
 
 const CartSidebar = () => {
   const libraryContext = useContext(LibraryContext);
@@ -14,7 +13,7 @@ const CartSidebar = () => {
   }
 
   const { cartState, handleCartStateOnClick, fetchBooks, fetchCategories } = libraryContext;
-  const { cartOrders, setCartOrders, isOrderPlaced, setIsOrderPlaced, userName } = loginContext;
+  const { cartOrders, setCartOrders, isOrderPlaced, setIsOrderPlaced, userName, fetchOrders } = loginContext;
 
   const postOrder = async () => {
     try {
@@ -33,6 +32,7 @@ const CartSidebar = () => {
       console.log(jsonData);
       await fetchCategories();
       await fetchBooks();
+      await fetchOrders();
     } catch (err) {
       console.log(err, 'could not post');
     }
@@ -75,9 +75,9 @@ const CartSidebar = () => {
               <h2 className="text-lg font-bold">Quantity</h2>
             </div>
           )}
-          <div>
+          <div className="flex flex-col gap-4 max-h-[500px] overflow-y-auto">
             {cartOrders.products.map(product => {
-              return <CartProduct key={uuid()} quantity={product.quantity} productId={product.productId} />;
+              return <CartProduct key={product.productId} quantity={product.quantity} productId={product.productId} />;
             })}
           </div>
         </div>
