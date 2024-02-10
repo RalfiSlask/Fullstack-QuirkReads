@@ -11,7 +11,15 @@ const LoginForm = () => {
     return;
   }
 
-  const { loginInputValues, setLoginErrorMessage, closeModalOnClick, setUserName, setCartOrders } = loginContext;
+  const {
+    loginInputValues,
+    loginErrorMessage,
+    setLoginErrorMessage,
+    closeModalOnClick,
+    setUserName,
+    setCartOrders,
+    setIsOrderPlaced,
+  } = loginContext;
 
   const postLoginUser = async () => {
     try {
@@ -33,6 +41,7 @@ const LoginForm = () => {
         setLoginErrorMessage('');
         setUserName(jsonData.name);
         setCartOrders(prev => ({ ...prev, user: jsonData.id }));
+        setIsOrderPlaced(false);
       }
     } catch (err) {
       console.log(err, 'could not post user');
@@ -43,7 +52,7 @@ const LoginForm = () => {
     e.preventDefault();
     const { email, password } = loginInputValues;
     if (email.trim().length <= 0 || password.trim().length <= 0) {
-      alert('You have to fill in inputs');
+      setLoginErrorMessage('you have to fill in inputs');
     } else {
       await postLoginUser();
     }
@@ -52,6 +61,7 @@ const LoginForm = () => {
   return (
     <>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-[300px] items-center">
+        <p className="text-red-500 text-lg h-[30px]">{loginErrorMessage}</p>
         <LoginInput type="text" text="email" inputKey="email" />
         <LoginInput type="password" text="password" inputKey="password" />
         <div className="flex justify-center gap-4">

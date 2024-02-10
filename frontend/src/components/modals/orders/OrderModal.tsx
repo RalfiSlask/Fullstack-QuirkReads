@@ -19,7 +19,7 @@ const OrderModal = () => {
   };
 
   return (
-    <section className="z-50 fixed left-[50%] overflow-y-auto max-h-[800px] -translate-x-1/2 w-[600px] flex flex-col pl-20 gap-10 items-start rounded-xl py-10 bg-secondary shadow-gray-800 mt-[200px]">
+    <section className="z-50 fixed left-[50%] overflow-y-auto max-h-[800px] -translate-x-1/2 w-[600px] flex flex-col pl-20 gap-10 items-start rounded-xl py-10 bg-secondary shadow-gray-800 mt-[150px]">
       <img
         onClick={closeModalOnClick}
         src={closeLogo}

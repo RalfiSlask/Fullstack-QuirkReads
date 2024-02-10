@@ -16,13 +16,13 @@ const LoginInput: React.FC<CreateAccountProps> = ({ type, text, inputKey }) => {
     return;
   }
 
-  const { loginInputValues, loginErrorMessage, handleLoginInputOnChange } = loginContext;
+  const { loginInputValues, handleLoginInputOnChange } = loginContext;
 
   return (
     <div className="flex flex-col gap-2 w-full">
       <div className="flex justify-between items-center">
         <label htmlFor={text}>{getStringWithcapitalizedFirstLetter(text)}</label>
-        <p className="text-red-500">{loginErrorMessage}</p>
+        <p className="text-red-500 h-[30px]"></p>
       </div>
       <input
         onInput={e => handleLoginInputOnChange(inputKey, e)}
