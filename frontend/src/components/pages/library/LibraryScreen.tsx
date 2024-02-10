@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import Header from './Header';
 import uuid from 'react-uuid';
-import Sidebar from './Sidebar';
+import Sidebar from '../../modals/sidebars/Sidebar';
 import SidebarColor from '../../ui/SidebarColor';
-import CartSidebar from './CartSidebar';
+import CartSidebar from '../../modals/sidebars/CartSidebar';
 import { LoginContext } from '../../../context/LoginContext';
 import LightBox from '../../ui/LightBox';
 import LoginModal from '../../modals/login/LoginModal';
