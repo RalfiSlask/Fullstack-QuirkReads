@@ -58,37 +58,38 @@ router.post('/', (req, res) => {
 router.post('/add', (req, res) => {
   const db = req.app.locals.db;
   const { name, email, password } = req.body;
+
   db.collection('users')
     .findOne({ email: email })
-    .then((emailMatches) => {
-      if (emailMatches) {
+    .then((emailExists) => {
+      if (emailExists) {
         console.log('email: ', email);
-        res.status(403).json({ err: 'user already exist' });
-        return;
-      }
-      const encryptedPassword = getEncryptedData(
-        password,
-        process.env.SALT_KEY
-      );
-      console.log(encryptedPassword);
-      return db.collection('users').insertOne({
-        id: uuidv4(),
-        name: name,
-        email: email,
-        password: encryptedPassword,
-      });
-    })
-    .then((insertResult) => {
-      if (insertResult.acknowledged) {
-        console.log('sent user', req.body);
-        res.status(201).json({ user: name, email: email });
+        return res.status(409).json({ err: 'user already exists' });
       } else {
-        res.status(500).json({ err: 'could not add user' });
+        const encryptedPassword = getEncryptedData(
+          password,
+          process.env.SALT_KEY
+        );
+        db.collection('users')
+          .insertOne({
+            id: uuidv4(),
+            name: name,
+            email: email,
+            password: encryptedPassword,
+          })
+          .then((insertResult) => {
+            console.log('user added successfully', insertResult);
+            return res.status(201).json({ user: name, email: email });
+          })
+          .catch((err) => {
+            console.log(err, 'could not add user');
+            return res.status(409).json({ err: 'could not add user' });
+          });
       }
     })
     .catch((err) => {
-      console.log(err, 'could not add user');
-      res.status(500).json({ err: 'could not add user' });
+      console.log(err, 'could not ass user');
+      return res.status(500).json({ err: 'could not add user' });
     });
 });
 
