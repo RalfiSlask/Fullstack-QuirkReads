@@ -1,18 +1,25 @@
 import CreateResetButton from './CreateResetButton';
 import SubmitButton from '../../shared/SubmitButton';
-import { FormEvent, useContext } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import { LoginContext } from '../../../context/LoginContext';
 import CreateAccountInput from './CreateAccountInput';
 import { ICreateAccountFormInputValues } from '../../../utils/types';
 
 const CreateAccountForm = () => {
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isFormValid, setIsFormValid] = useState({ email: false, name: false });
   const loginContext = useContext(LoginContext);
 
   if (!loginContext) {
     return;
   }
 
-  const { setCreateAccountErrorMessage, createAccountInputValues, handleCreateAccountReset } = loginContext;
+  const {
+    setCreateAccountErrorMessage,
+    createAccountInputValues,
+    handleCreateAccountReset,
+    createAccountErrorMessage,
+  } = loginContext;
 
   const inputs = [
     { id: 1, type: 'text', text: 'name', inputKey: 'name' as keyof ICreateAccountFormInputValues },
@@ -48,8 +55,13 @@ const CreateAccountForm = () => {
     e.preventDefault();
     const { email, password } = createAccountInputValues;
     if (email.trim().length <= 0 || password.trim().length <= 0) {
-      alert('You have to fill in inputs');
+      setCreateAccountErrorMessage('you have to fill in inputs');
+    } else if (!isFormValid.email || !isFormValid.name) {
+      setFormSubmitted(true);
+      console.log('form is not valid');
     } else {
+      setIsFormValid({ email: false, name: false });
+      setFormSubmitted(true);
       await postInputValues();
     }
   };
@@ -62,9 +74,20 @@ const CreateAccountForm = () => {
       id="formInput"
       className="flex flex-col gap-4 w-[400px] items-center"
     >
+      <p className="text-red-500 text-lg">{createAccountErrorMessage}</p>
       {inputs.map(input => {
         const { id, type, text, inputKey } = input;
-        return <CreateAccountInput key={id} type={type} text={text} inputKey={inputKey} />;
+        return (
+          <CreateAccountInput
+            key={id}
+            type={type}
+            text={text}
+            inputKey={inputKey}
+            formSubmitted={formSubmitted}
+            setIsFormValid={setIsFormValid}
+            setFormSubmitted={setFormSubmitted}
+          />
+        );
       })}
 
       <div className="flex justify-center gap-4">
