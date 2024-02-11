@@ -93,23 +93,29 @@ router.post('/add', (req, res) => {
     .then((productResults) => {
       if (productResults) {
         console.log('book already exists');
-        res.json({ err: 'book already exists' });
+        res.status(409).json({ err: 'book already exists' });
         return;
-      }
-      return db.collection('products').insertOne(insertedProduct);
-    })
-    .then((insertResult) => {
-      // if insertOne operation goes through
-      if (insertResult.acknowledged) {
-        console.log('sent product:', insertedProduct);
-        res.json(insertedProduct);
       } else {
-        res.status(500).json({ err: 'could not add product' });
+        db.collection('products')
+          .insertOne(insertedProduct)
+          .then((insertResult) => {
+            // if insertOne operation goes through
+            if (insertResult.acknowledged) {
+              console.log('sent product:', insertedProduct);
+              res.json(insertedProduct);
+            } else {
+              res.status(500).json({ err: 'could not add product' });
+            }
+          })
+          .catch((err) => {
+            console.log(err, 'cant find product');
+            res.status(500).json({ err: 'cant find product' });
+          });
       }
     })
     .catch((err) => {
-      console.log(err, 'cant find product');
-      res.status(500).json({ err: 'cant find product' });
+      console.log(err, 'error adding product');
+      res.status(500).json({ err: 'error adding product' });
     });
 });
 
