@@ -24,10 +24,10 @@
 
 ## Formatting
 
-This projects uses code standars by appling the dependecies eslint and prettier tools:
+This projects uses code standars by applying the eslint and prettier tools:
 
-- **Eslint**: identifies bugs and patterns to make the code more consistent.
-- **Prettier**: code formatter.
+- **Eslint**: identifies bugs and patterns to make the code more consistent
+- **Prettier**: code formatter for making the code more readable and consistent.
 
 ## Status
 
