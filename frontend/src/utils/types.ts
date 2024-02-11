@@ -16,6 +16,7 @@ export interface IBookType {
   lager: number;
   id: string;
   category: string;
+  image?: string;
 }
 
 export interface ICategoryType {
