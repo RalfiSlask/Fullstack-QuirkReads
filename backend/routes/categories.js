@@ -43,20 +43,24 @@ router.post('/add', (req, res) => {
     .findOne({ name: req.body.name })
     .then((category) => {
       if (category) {
-        console.log(category);
-        return res.status(500).json({ err: 'category already exists' });
-      }
-      return db
-        .collection('categories')
-        .insertOne({ name: req.body.name, id: uuidv4() });
-    })
-    .then((result) => {
-      if (result.acknowledged) {
-        console.log('added category');
-        res.status(201).json({ created: req.body.name });
+        console.log('category already exists');
+        return res.status(409).json({ err: 'category already exists' });
       } else {
-        console.log('category not added');
-        res.status(500).json({ err: 'category not added' });
+        db.collection('categories')
+          .insertOne({ name: req.body.name, id: uuidv4() })
+          .then((result) => {
+            if (result.acknowledged) {
+              console.log('added category');
+              res.status(201).json({ created: req.body.name });
+            } else {
+              console.log('category not added');
+              res.status(500).json({ err: 'category not added' });
+            }
+          })
+          .catch((err) => {
+            console.log(err, 'could not add category');
+            res.status(500).json({ err: 'could not add category' });
+          });
       }
     })
     .catch((err) => {
