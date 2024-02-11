@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import cartLogo from '../../../assets/icons/cart.svg';
 import { LibraryContext } from '../../../context/LibraryContext';
 import { LoginContext } from '../../../context/LoginContext';
+import childLogo from '../../../assets/images/reading.png';
 
 const Header = () => {
   const libraryContext = useContext(LibraryContext);
@@ -15,8 +16,11 @@ const Header = () => {
   const { cartOrders } = loginContext;
 
   return (
-    <header className="bg-primaryBtn h-14 w-full flex items-center justify-between fixed top-0 z-20 pr-10 pl-10">
-      <h1 className="font-bold text-2xl">QuirkReads</h1>
+    <header className="bg-primaryBtn-hover h-28 w-full flex items-center justify-between fixed top-0 z-20 pr-10 pl-10">
+      <div className="flex gap-4 items-center">
+        <img src={childLogo} alt="child on ladder with books" width="100" height="100" />
+        <h1 className="font-bold text-2xl">QuirkReads</h1>
+      </div>
       <div className="flex gap-4">
         <div className="relative cursor-pointer">
           {cartOrders.products.length > 0 && (

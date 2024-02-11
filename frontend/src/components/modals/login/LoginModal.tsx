@@ -13,7 +13,7 @@ const LoginModal = () => {
   const { handleCreateAnAccountOnClick, closeModalOnClick } = loginContext;
 
   return (
-    <section className="z-50 fixed left-[50%] -translate-x-1/2 w-[700px] flex flex-col gap-10 items-center rounded-xl py-10 bg-secondary shadow-gray-800 mt-[200px]">
+    <section className="z-50 fixed left-[50%] -translate-x-1/2 w-[700px] flex flex-col gap-10 items-center rounded-xl py-10 bg-secondary shadow-soft1 mt-[200px]">
       <img
         onClick={closeModalOnClick}
         src={closeLogo}

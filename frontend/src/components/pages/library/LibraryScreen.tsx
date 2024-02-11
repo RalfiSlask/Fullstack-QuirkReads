@@ -24,7 +24,7 @@ const LibraryScreen = () => {
   const { books } = libraryContext;
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center bg-primary">
       <Header />
       <SidebarColor />
       <Sidebar />
@@ -33,7 +33,7 @@ const LibraryScreen = () => {
       {loginModals.login && <LoginModal />}
       {loginModals.create && <CreateAccountModal />}
       {loginModals.order && <OrderModal />}
-      <main className="w-full pl-[400px] pr-[50px] pt-[120px] pb-[100px] flex flex-col">
+      <main className="w-full pl-[400px] pr-[50px] pt-[160px] pb-[100px] flex flex-col">
         <section className="w-full flex justify-between flex-wrap max-w-[1000px] gap-x-4 gap-y-6">
           {books ? (
             books?.map(book => {

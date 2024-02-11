@@ -52,7 +52,7 @@ const CartSidebar = () => {
     <section
       className={`${
         cartState ? 'openCart' : 'cart'
-      } fixed right-0 border-l border-solid w-[400px] flex flex-col justify-between border-primaryBtn bg-secondary pt-24 pb-12 px-6 h-full`}
+      } fixed right-0 border-2 border-solid w-[400px] flex flex-col justify-between border-primaryBtn bg-secondary pt-36 pb-12 px-6 h-full`}
     >
       <div>
         <div className="flex justify-between items-center">

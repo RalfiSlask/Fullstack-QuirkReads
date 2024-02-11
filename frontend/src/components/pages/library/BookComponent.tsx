@@ -17,16 +17,22 @@ const BookComponent: React.FC<BookProps> = ({ bookInfo }) => {
 
   const { addProductToCart } = loginContext;
 
-  const { name, description, price, id, lager } = bookInfo;
+  const { name, description, price, id, lager, image } = bookInfo;
 
   return (
-    <div className="bg-secondary py-4 px-3 w-[200px] h-[320px] flex flex-col justify-between  items-center rounded-md">
+    <div className="bg-secondary shadow-soft1 py-4 px-3 w-[200px] h-[320px] flex flex-col justify-between  items-center rounded-md">
       <div className="flex flex-col gap-2 items-center">
-        <img src={bookCover} alt="book cover" width="80px" height="100px" />
+        <div className="w-[90px] h-[120px]">
+          <img
+            src={image !== undefined ? `/${image}.jpg` : bookCover}
+            alt="book cover"
+            className="w-full h-full cover"
+          />
+        </div>
+
         <h2 className="text-center font-bold">{description}</h2>
         <p className="italic text-center">{name}</p>
       </div>
-
       <div className="w-full flex-col flex gap-2 justify-between">
         <div className="flex justify-between items-center">
           <p>${price}</p>

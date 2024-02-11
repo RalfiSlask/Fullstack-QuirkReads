@@ -1,6 +1,6 @@
 import CreateResetButton from './CreateResetButton';
 import SubmitButton from '../../shared/SubmitButton';
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import { LoginContext } from '../../../context/LoginContext';
 import CreateAccountInput from './CreateAccountInput';
 import { ICreateAccountFormInputValues } from '../../../utils/types';
@@ -37,13 +37,14 @@ const CreateAccountForm = () => {
         body: JSON.stringify(createAccountInputValues),
       });
       if (!response.ok) {
-        setCreateAccountErrorMessage('cant create user');
+        setCreateAccountErrorMessage('user already exists');
         return;
       }
       const jsonData = await response.json();
       if (jsonData) {
         handleCreateAccountReset();
         setCreateAccountErrorMessage('');
+        setIsFormValid({ email: false, name: false });
         alert('succesfully created account');
       }
     } catch (err) {
@@ -58,10 +59,10 @@ const CreateAccountForm = () => {
       setCreateAccountErrorMessage('you have to fill in inputs');
     } else if (!isFormValid.email || !isFormValid.name) {
       setFormSubmitted(true);
-      console.log('form is not valid');
     } else {
-      setIsFormValid({ email: false, name: false });
+      console.log('hej goes through');
       setFormSubmitted(true);
+      setCreateAccountErrorMessage('');
       await postInputValues();
     }
   };

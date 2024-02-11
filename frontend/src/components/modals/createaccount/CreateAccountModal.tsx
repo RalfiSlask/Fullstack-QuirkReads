@@ -3,7 +3,7 @@ import GoBackButton from './GoBackButton';
 
 const CreateAccountModal = () => {
   return (
-    <section className="z-50 fixed left-[50%] -translate-x-1/2 w-[700px] pt-[100px] pb-10 rounded-xl flex justify-center items-center bg-secondary  shadow-gray-800 mt-[200px]">
+    <section className="z-50 fixed left-[50%] -translate-x-1/2 w-[700px] pt-[100px] pb-10 rounded-xl flex justify-center items-center bg-secondary shadow-soft1 mt-[200px]">
       <div className="absolute left-4 top-4">
         <GoBackButton />
       </div>
