@@ -48,7 +48,7 @@ To run the Quirk Reads webapp on you local machine, follow these steps:
 
 The Quirks Reads web application is simulating a webshop for childrens books. It got vibrant colors, fun logos and a big selection of books with funny names!
 
-### Features
+### Client Features
 
 - **Login form**: User can login with stored password and mail.
 - **Create account**: User can create a new account with password, email and name.
