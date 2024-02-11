@@ -29,7 +29,7 @@ h2 {
 }
 
 .input {
-  @apply rounded-md pl-2 py-2 border-2 border-solid border-primaryBtn-border placeholder:text-gray-400;
+  @apply rounded-md pl-2 py-2 focus:outline-primaryBtn-hover focus:bg-amber-100 placeholder:text-gray-400;
 }
 
 .openCart {
