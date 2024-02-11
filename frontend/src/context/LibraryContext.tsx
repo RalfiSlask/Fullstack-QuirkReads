@@ -121,13 +121,6 @@ export const LibraryContextProvider: React.FC<ILibraryType> = ({ children }) => 
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (books === undefined) {
-      return;
-    }
-    console.log(books);
-  }, [books]);
-
   const contextValues = {
     // states
     cartState: cartState,
