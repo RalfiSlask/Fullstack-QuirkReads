@@ -1,5 +1,7 @@
 # Fullstack Webshop QuirkReads
 
+![QuirkReads](https://github.com/plugga-tech/express-api-webshop-js-RalfiSlask/assets/112242026/23070666-f67f-4ca6-97b4-a7c982605561)
+
 ## Tech Stacks
 
 ### Frontend
@@ -24,8 +26,8 @@
 
 This projects uses code standars by appling the dependecies eslint and prettier tools:
 
-- **Eslint**: identifies bugs and patterns to make the code more consistent
-- **Prettier**: code formatter
+- **Eslint**: identifies bugs and patterns to make the code more consistent.
+- **Prettier**: code formatter.
 
 ## Status
 
@@ -37,23 +39,23 @@ To run the Quirk Reads webapp on you local machine, follow these steps:
 
 1. Download or clone the repository.
 2. Install the necessary dependencies by running `npm install`.
-3. Start the frontend application using `npm run dev`-
+3. Start the frontend application using `npm run dev`.
 4. Start the backend using `nodemon start` or `node start`.
 5. Setup envs according to example.env.
 6. Connect to mongoDB database.
 
 ## App Description
 
-The Quirks Reads web application is simulating a webshop for books.
+The Quirks Reads web application is simulating a webshop for childrens books. It got vibrant colors, fun logos and a big selection of books with funny names!
 
 ### Features
 
 - **Login form**: User can login with stored password and mail.
 - **Create account**: User can create a new account with password, email and name.
 - **Cart**: Features a cart.
-- **Purchase books**: User can add books to cart.
-- **Place Order**: User can place an order for the books in cart.
-- **View orders**: User can view placed orders.
+- **Purchase books**: Add books to cart
+- **Place Order**: Can place an order for everything in the cart
+- **View orders**: Users can view their placed orders
 - **Filter by categories**: User can filter books by categories.
 
 ## Author
