@@ -4,14 +4,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        'primary': '#F2F2F2',
-        'secondary': '#FFFFFF',
-        'primaryBtn': '#B0C4DE',
-        'primaryBtn-hover': '#A9A9A9',
-        'primaryBtn-shadow': 'rgba(0, 0, 0, 0.1)',
-        'primaryBtn-border': '#DED2D9',
-        'header': '#B0C4DE',
+        'primary': '#FFFFFF',
+        'secondary': '#FFF8F1',
+        'primaryBtn': '#AFD1D4',
+        'primaryBtn-hover': '#FFB7A8',
+        'primaryBtn-shadow': 'rgba(255, 214, 186, 0.5)',
+        'primaryBtn-border': '#FF87A8',
+        'header': '#FFD6BA',
         'grayText': '#828282',
+      },
+      boxShadow: {
+        soft1: '0 0 8px 0 rgba(175, 209, 212, 0.8)',
       },
     },
   },
