@@ -1,5 +1,6 @@
 import { createContext, FormEvent, ReactNode, useState, useEffect, useCallback } from 'react';
 import { ILoginFormInputValues, ICreateAccountFormInputValues, IModalType, IOrderType } from '../utils/types';
+import { textOnlyRegx, emailRegex } from '../utils/regexes';
 
 export const LoginContext = createContext<undefined | ILoginTypes>(undefined);
 
@@ -27,13 +28,22 @@ interface ILoginTypes {
   handleLoginInputOnChange: (inputKey: keyof ILoginFormInputValues, e: FormEvent<HTMLInputElement>) => void;
   handleCreateAccountInputOnChange: (
     inputKey: keyof ICreateAccountFormInputValues,
-    e: FormEvent<HTMLInputElement>
+    e: FormEvent<HTMLInputElement>,
+    setError: React.Dispatch<React.SetStateAction<string>>,
+    setIsFormValid: React.Dispatch<
+      React.SetStateAction<{
+        email: boolean;
+        name: boolean;
+      }>
+    >,
+    setFormSubmitted: React.Dispatch<React.SetStateAction<boolean>>
   ) => void;
   changeStateOfModal: (key: keyof IModalType, state: boolean) => void;
   handleCreateAnAccountOnClick: () => void;
   closeModalOnClick: () => void;
-  addProductToCart: (quantity: number, productId: string) => void;
+  addProductToCart: (productId: string, storage: number) => void;
   deleteProductFromCart: (productId: string) => void;
+  fetchOrders: () => Promise<void>;
 }
 
 interface ILoginType {
@@ -59,21 +69,22 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
 
   const token = import.meta.env.VITE_TOKEN;
 
-  const addProductToCart = (quantity: number, productId: string) => {
+  const addProductToCart = (productId: string, storage: number) => {
     const productExistInCart = cartOrders.products.some(product => product.productId === productId);
-    if (quantity <= 0) {
-      console.log('no product quantity');
-      return;
-    }
 
     if (productExistInCart) {
       console.log('already exist in cart');
       return;
     }
 
+    if (storage <= 0) {
+      console.log('not enough in storage');
+      return;
+    }
+
     setCartOrders(prev => ({
       ...prev,
-      products: [...prev.products, { productId: productId, quantity: quantity }],
+      products: [...prev.products, { productId: productId, quantity: 1 }],
     }));
     setIsOrderPlaced(false);
   };
@@ -163,11 +174,43 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
 
   const handleCreateAccountInputOnChange = (
     inputKey: keyof ICreateAccountFormInputValues,
-    e: FormEvent<HTMLInputElement>
+    e: FormEvent<HTMLInputElement>,
+    setError: React.Dispatch<React.SetStateAction<string>>,
+    setIsFormValid: React.Dispatch<
+      React.SetStateAction<{
+        email: boolean;
+        name: boolean;
+      }>
+    >,
+    setFormSubmitted: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
     const target = e.target as HTMLInputElement;
     setCreateAccountInputValues(prev => ({ ...prev, [inputKey]: target.value }));
     setCreateAccountErrorMessage('');
+    setFormSubmitted(false);
+    setError('');
+    let isValid = false;
+
+    if (inputKey === 'name') {
+      isValid = textOnlyRegx.test(target.value);
+    } else if (inputKey === 'email') {
+      isValid = emailRegex.test(target.value);
+    }
+
+    if (inputKey !== 'password') {
+      setIsFormValid(prev => ({
+        ...prev,
+        [inputKey]: isValid,
+      }));
+    }
+
+    if (!isValid) {
+      if (inputKey === 'name') {
+        setError('not valid name');
+      } else if (inputKey === 'email') {
+        setError('not valid email');
+      }
+    }
   };
 
   const contextValues = {
@@ -190,6 +233,7 @@ export const LoginContextProvider: React.FC<ILoginType> = ({ children }) => {
     setLoginErrorMessage: setLoginErrorMessage,
     setCreateAccountErrorMessage: setCreateAccountErrorMessage,
     // functions
+    fetchOrders: fetchOrders,
     handleLoginReset: handleLoginReset,
     handleCreateAccountReset: handleCreateAccountReset,
     handleLoginInputOnChange: handleLoginInputOnChange,
