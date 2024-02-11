@@ -16,68 +16,64 @@ router.get('/', function (req, res) {
  * Then decreases the lager according to the quantity in the order with a bulk operation
  * Lastly inserts the order into database
  */
-router.post('/add', (req, res) => {
+
+router.post('/add', async (req, res) => {
   const sentProducts = req.body.products;
   const db = req.app.locals.db;
-  db.collection('users')
-    .findOne({ id: req.body.user })
-    .then((user) => {
-      if (!user) {
-        console.log('user was not found');
-        return res.status(404).json({ err: 'user was not found' });
-      }
-      return db.collection('products').find().toArray();
-    })
-    // get all products
-    .then((storedProductsData) => {
-      if (storedProductsData.length <= 0) {
-        console.log('products does not exist');
-        res.status(500).json('could not find products');
-      }
-      // converting products to an array with product ids
-      const storedProductIds = storedProductsData.map((product) => product.id);
-      // Checks if the order products are the same as in stock
-      const isProductsValid = sentProducts.every((sentProduct) =>
-        storedProductIds.includes(sentProduct.productId)
-      );
-      if (!isProductsValid) {
-        console.log('some product ids are faulty');
-        return res.status(404).json({ err: 'products does not exist' });
-      }
+  try {
+    const user = await db.collection('users').findOne({ id: req.body.user });
 
-      // updates the products lager according to each orders quantity
-      const bulkOperation = sentProducts.map((product) => {
-        return {
-          updateOne: {
-            filter: { id: product.productId },
-            update: {
-              $inc: { lager: -1 * product.quantity },
+    if (!user) {
+      console.log('user was not found');
+      return res.status(404).json({ err: 'user was not found' });
+    }
+
+    const storedProductsData = await db.collection('products').find().toArray(); // get all products
+
+    if (storedProductsData.length <= 0) {
+      console.log('products does not exist');
+      return res.status(500).json('could not find products');
+    }
+
+    const storedProductIds = storedProductsData.map((product) => product.id);
+    // Checks if the order products are the same as in stock
+    const isProductsValid = sentProducts.every((sentProduct) =>
+      storedProductIds.includes(sentProduct.productId)
+    );
+    if (!isProductsValid) {
+      console.log('some product ids are faulty');
+      return res.status(404).json({ err: 'products does not exist' });
+    }
+
+    const bulkOperation = sentProducts.map((product) => {
+      return {
+        updateOne: {
+          filter: { id: product.productId },
+          update: {
+            $inc: {
+              lager: -1 * product.quantity,
             },
           },
-        };
-      });
-
-      return db.collection('products').bulkWrite(bulkOperation);
-    })
-    .then((update) => {
-      if (update.matchedCount === 0) {
-        console.log('update failed');
-        return res.status(500).json({ err: 'update failed' });
-      }
-
-      return db.collection('orders').insertOne(req.body);
-    })
-    .then((insertedResults) => {
-      console.log('added order', req.body);
-      res.json({
-        insertInfo: insertedResults,
-        order: req.body,
-      });
-    })
-    .catch((err) => {
-      console.log(err, 'could not process get request');
-      res.status(500).json({ err: 'could not process, server error' });
+        },
+      };
     });
+
+    const bulkUpdate = await db.collection('products').bulkWrite(bulkOperation);
+    if (bulkUpdate.matchedCount === 0) {
+      console.log('update dit not work');
+      return res.status(500).json({ err: 'update failed' });
+    }
+
+    const insertedResults = await db.collection('orders').insertOne(req.body);
+    console.log('added order', req.body);
+    res.json({
+      insertInfo: insertedResults,
+      order: req.body,
+    });
+  } catch (err) {
+    console.log(err, 'could not process, server error');
+    res.status(500).json({ err: 'could not process, server error' });
+  }
 });
 
 /**
