@@ -28,10 +28,10 @@ const Sidebar = () => {
   };
 
   return (
-    <section className="fixed left-0 w-[350px] bg-secondary h-full pt-24 pb-20 pl-28 flex flex-col gap-20 border-r border-solid border-primaryBtn">
+    <section className="fixed left-0 w-[350px] bg-secondary h-full pt-36 pb-20 pl-28 flex flex-col gap-20 border-r  border-solid border-primaryBtn">
       <UserComponent />
       <div className="flex flex-col justify-between h-full w-full">
-        <ul className="flex flex-col gap-2 text-xl ">
+        <ul className="flex flex-col gap-4 text-xl ">
           <div className="flex items-center gap-4">
             <img src={homeLogo} alt="home icon" width="30" height="30" />
             <li className="hover:text-primaryBtn cursor-pointer">Home</li>
