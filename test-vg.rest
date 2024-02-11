@@ -60,7 +60,7 @@ POST http://localhost:3000/api/products/add
 Content-Type: application/json
 
 {
-  "name": "Produkt 5",
+  "name": "Produ2kt 5",
   "description": "Beskrivning av produkt 5",
   "price": 100,
   "lager": 10,
@@ -114,14 +114,14 @@ POST http://localhost:3000/api/orders/add
 Content-Type: application/json
 
 {
-  "user": "d1ac2866-c103-481c-a1f9-76517b31ae5b",
+  "user": "d7a881fa-eaa8-4917-8b47-1bc4686d924d",
       "products": [
     {
-      "productId": "5cc013c5-c54c-4449-9546-f556512852ca",
-      "quantity": 1
+      "productId": "de84f5e9-171a-4e50-a54a-3b563dd9f326",
+      "quantity": 5
     },
     {
-      "productId": "564e8506-e5ba-45dc-8d98-595e5b4d1531",
+      "productId": "3986b092-f979-4a16-9b7e-d94906cc9fd7",
       "quantity": 2
     }
   ]
