@@ -24,9 +24,9 @@
 
 ## Formatting
 
-This projects uses code standars by applying the eslint and prettier tools:
+This projects uses code standards by applying the eslint and prettier tools:
 
-- **Eslint**: identifies bugs and patterns to make the code more consistent
+- **Eslint**: identifies bugs and patterns to make the code more consistent.
 - **Prettier**: code formatter for making the code more readable and consistent.
 
 ## Status
@@ -53,9 +53,9 @@ The Quirks Reads web application is simulating a webshop for childrens books. It
 - **Login form**: User can login with stored password and mail.
 - **Create account**: User can create a new account with password, email and name.
 - **Cart**: Features a cart.
-- **Purchase books**: Add books to cart
-- **Place Order**: Can place an order for everything in the cart
-- **View orders**: Users can view their placed orders
+- **Purchase books**: Add books to cart.
+- **Place Order**: Can place an order for everything in the cart.
+- **View orders**: Users can view their placed orders.
 - **Filter by categories**: User can filter books by categories.
 
 ## Author
