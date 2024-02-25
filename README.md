@@ -1,6 +1,7 @@
 # Fullstack Webshop QuirkReads
 
-![QuirkReads](https://github.com/plugga-tech/express-api-webshop-js-RalfiSlask/assets/112242026/23070666-f67f-4ca6-97b4-a7c982605561)
+![303924788-23070666-f67f-4ca6-97b4-a7c982605561](https://github.com/RalfiSlask/Fullstack-QuirkReads/assets/112242026/789c4b2a-fa6c-431b-a8a9-720d12b5cdc6)
+
 
 ## Tech Stacks
 
